@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Heart, MessageSquare, TrendingUp } from 'lucide-react';
 import { getImageUrl, getAvatarUrl } from '../utils/index.js';
+import { getApiBaseUrl } from '../utils/api';
 
 export default function SeekerDashboard() {
   const navigate = useNavigate();
@@ -28,9 +29,10 @@ export default function SeekerDashboard() {
   const fetchDashboardData = async () => {
     try {
       const token = localStorage.getItem('token');
+      const baseUrl = getApiBaseUrl();
       
       // Fetch chats
-      const chatResponse = await fetch('/api/chats', {
+      const chatResponse = await fetch(`${baseUrl}/api/chats`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
@@ -41,7 +43,7 @@ export default function SeekerDashboard() {
       const chatsWithMessages = await Promise.all(
         (chatData.chats || []).map(async (chat) => {
           try {
-            const messageResponse = await fetch(`/api/chats/${chat._id}`, {
+            const messageResponse = await fetch(`${baseUrl}/api/chats/${chat._id}`, {
               headers: { 'Authorization': `Bearer ${token}` }
             });
             const messageData = await messageResponse.json();
@@ -58,7 +60,7 @@ export default function SeekerDashboard() {
       setChats(chatsWithMessages);
       
       // Fetch saved journeys count
-      const savedResponse = await fetch('/api/journeys/saved/all', {
+      const savedResponse = await fetch(`${baseUrl}/api/journeys/saved/all`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -66,7 +68,7 @@ export default function SeekerDashboard() {
       const totalFavorites = savedData.count || 0;
       
       // Fetch viewed journeys count
-      const viewedResponse = await fetch('/api/journeys/viewed/count', {
+      const viewedResponse = await fetch(`${baseUrl}/api/journeys/viewed/count`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -154,7 +156,9 @@ export default function SeekerDashboard() {
                                 src={otherParticipant?.profileImage ? getImageUrl(otherParticipant.profileImage) : getAvatarUrl(otherParticipant)} 
                                 alt={otherParticipant?.name}
                                 className="w-8 h-8 rounded-full object-cover"
-                                onError={(e) => e.target.src = getAvatarUrl(otherParticipant)}
+                                onError={(e) => {
+                                  e.target.src = getAvatarUrl(otherParticipant);
+                                }}
                               />
                               <span className="font-semibold text-gray-900">{otherParticipant?.name}</span>
                             </>

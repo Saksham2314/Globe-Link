@@ -3,6 +3,7 @@ import Hero from '../components/Hero';
 import SearchBar from '../components/SearchBar';
 import JourneyCard from '../components/JourneyCard';
 import { Loader } from 'lucide-react';
+import { getApiBaseUrl } from '../utils/api';
 
 export default function Home() {
   const [journeys, setJourneys] = useState([]);
@@ -18,7 +19,8 @@ export default function Home() {
     setError('');
     try {
       const params = new URLSearchParams(filters).toString();
-      const url = `/api/journeys${params ? '?' + params : ''}`;
+      const baseUrl = getApiBaseUrl();
+      const url = `${baseUrl}/api/journeys${params ? '?' + params : ''}`;
       console.log('Fetching with filters:', filters);
       console.log('Generated URL:', url);
       const response = await fetch(url);

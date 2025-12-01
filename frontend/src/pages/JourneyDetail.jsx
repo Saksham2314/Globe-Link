@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MapPin, Calendar, User, MessageCircle, Loader, Play, ImageIcon } from 'lucide-react';
 import { getImageUrl, getAvatarUrl } from '../utils/index.js';
+import { getApiBaseUrl } from '../utils/api';
 
 export default function JourneyDetail() {
   const { id } = useParams();
@@ -33,7 +34,8 @@ export default function JourneyDetail() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`/api/journeys/${id}`, {
+      const baseUrl = getApiBaseUrl();
+      const response = await fetch(`${baseUrl}/api/journeys/${id}`, {
         method: 'GET',
         headers
       });
@@ -60,7 +62,8 @@ export default function JourneyDetail() {
     setCreatingChat(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/chats', {
+      const baseUrl = getApiBaseUrl();
+      const response = await fetch(`${baseUrl}/api/chats`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -132,7 +135,9 @@ export default function JourneyDetail() {
                   src={getImageUrl(allMedia[selectedImage])} 
                   alt="Journey" 
                   className="max-h-96 max-w-full object-contain"
-                  onError={(e) => e.target.src = '/api/placeholder'}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                  }}
                 />
               </div>
               
@@ -166,9 +171,11 @@ export default function JourneyDetail() {
                         src={getImageUrl(media)} 
                         alt="Thumbnail" 
                         className="w-16 h-16 object-cover"
-                        onError={(e) => e.target.src = '/api/placeholder'}
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
                       />
-                      {media.includes('mp4') || media.includes('webm') || media.includes('mov') ? (
+                      {media.includes('mp4') || media.includes('webm') || media.includes('mov') || media.includes('video') ? (
                         <Play size={20} className="absolute inset-0 m-auto text-white" />
                       ) : null}
                     </button>
@@ -259,10 +266,12 @@ export default function JourneyDetail() {
               <h2 className="text-2xl font-bold text-gray-900 mb-4">Meet the Traveler</h2>
               <div className="flex flex-col md:flex-row items-start md:items-center gap-6 bg-gradient-to-r from-gray-50 to-blue-50 p-8 rounded-xl border-2 border-blue-200">
                 <img
-                  src={getImageUrl(journey.traveler?.profileImage) || getAvatarUrl(journey.traveler)}
+                  src={journey.traveler?.profileImage ? getImageUrl(journey.traveler.profileImage) : getAvatarUrl(journey.traveler)}
                   alt={journey.traveler?.name}
                   className="w-24 h-24 rounded-full shadow-lg object-cover"
-                  onError={(e) => e.target.src = getAvatarUrl(journey.traveler)}
+                  onError={(e) => {
+                    e.target.src = getAvatarUrl(journey.traveler);
+                  }}
                 />
                 <div className="flex-1">
                   <h3 className="text-2xl font-bold text-gray-900">{journey.traveler?.name}</h3>

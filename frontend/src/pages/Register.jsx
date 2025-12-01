@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, Globe, ArrowRight, Upload } from 'lucide-react';
+import { getApiBaseUrl } from '../utils/api';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -53,7 +54,8 @@ export default function Register() {
         formDataToSend.append('profileImage', profileImage);
       }
 
-      const response = await fetch('/api/auth/register', {
+      const baseUrl = getApiBaseUrl();
+      const response = await fetch(`${baseUrl}/api/auth/register`, {
         method: 'POST',
         body: formDataToSend
       });

@@ -62,7 +62,9 @@ export default function JourneyCard({ journey }) {
             src={getImageUrl(journey.images[0])} 
             alt={journey.title}
             className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-            onError={(e) => e.target.src = '/api/placeholder'}
+            onError={(e) => {
+              e.target.style.display = 'none';
+            }}
           />
         </div>
       )}
@@ -107,10 +109,12 @@ export default function JourneyCard({ journey }) {
       <div className="flex items-center justify-between pt-4 border-t border-gray-200">
         <div className="flex items-center gap-2 min-w-0">
           <img 
-            src={getImageUrl(journey.traveler?.profileImage) || getAvatarUrl(journey.traveler)} 
+            src={journey.traveler?.profileImage ? getImageUrl(journey.traveler.profileImage) : getAvatarUrl(journey.traveler)} 
             alt={journey.traveler?.name}
             className="w-8 h-8 rounded-full flex-shrink-0 object-cover"
-            onError={(e) => e.target.src = getAvatarUrl(journey.traveler)}
+            onError={(e) => {
+              e.target.src = getAvatarUrl(journey.traveler);
+            }}
           />
           <span className="text-sm font-semibold text-gray-900 truncate">{journey.traveler?.name}</span>
         </div>

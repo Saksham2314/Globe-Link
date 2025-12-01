@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Calendar, DollarSign, X, Upload, Play } from 'lucide-react';
+import { getApiBaseUrl } from '../utils/api';
 
 export default function PostJourney() {
   const [formData, setFormData] = useState({
@@ -151,7 +152,8 @@ export default function PostJourney() {
         formDataObj.append('files', file);
       });
 
-      const response = await fetch('/api/journeys', {
+      const baseUrl = getApiBaseUrl();
+      const response = await fetch(`${baseUrl}/api/journeys`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

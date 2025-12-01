@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Plane, MessageSquare, Eye, Trash2, Edit2 } from 'lucide-react';
 import { getImageUrl, getAvatarUrl } from '../utils/index.js';
+import { getApiBaseUrl } from '../utils/api';
 
 export default function TravelerDashboard() {
   const navigate = useNavigate();
@@ -21,9 +22,10 @@ export default function TravelerDashboard() {
   const fetchDashboardData = async () => {
     try {
       const token = localStorage.getItem('token');
+      const baseUrl = getApiBaseUrl();
       
       // Fetch journeys
-      const journeyResponse = await fetch('/api/journeys/my-journeys', {
+      const journeyResponse = await fetch(`${baseUrl}/api/journeys/my-journeys`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
@@ -33,7 +35,7 @@ export default function TravelerDashboard() {
       setJourneys(journeyData.journeys || []);
       
       // Fetch chats to count messages
-      const chatResponse = await fetch('/api/chats', {
+      const chatResponse = await fetch(`${baseUrl}/api/chats`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -71,7 +73,8 @@ export default function TravelerDashboard() {
     
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/journeys/${id}`, {
+      const baseUrl = getApiBaseUrl();
+      const response = await fetch(`${baseUrl}/api/journeys/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -155,7 +158,15 @@ export default function TravelerDashboard() {
                       {journey.images && journey.images.length > 0 && (
                         <div className="flex gap-2 mt-3">
                           {journey.images.map((img, idx) => (
-                            <img key={idx} src={getImageUrl(img)} alt="Journey" className="w-16 h-16 rounded object-cover" onError={(e) => e.target.src = '/api/placeholder'} />
+                            <img 
+                              key={idx} 
+                              src={getImageUrl(img)} 
+                              alt="Journey" 
+                              className="w-16 h-16 rounded object-cover" 
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                              }} 
+                            />
                           ))}
                         </div>
                       )}

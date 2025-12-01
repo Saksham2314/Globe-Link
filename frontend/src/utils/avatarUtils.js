@@ -1,9 +1,5 @@
-// Get avatar based on user's gender for consistency
+// Get avatar based on user's gender for consistency (returns dicebear avatar as fallback)
 export const getAvatarUrl = (user) => {
-  if (user?.profileImage) {
-    return user.profileImage;
-  }
-  
   // Use gender-based avatar styles for consistency
   const genderStyles = {
     male: 'pixel-art', // More masculine style

@@ -3,6 +3,7 @@ import { useContext, useState, useEffect } from 'react';
 import { MapPin, MessageSquare, LogOut, Plus, BarChart3, Moon, Sun } from 'lucide-react';
 import { getImageUrl, getAvatarUrl } from '../utils/index.js';
 import { ThemeContext } from '../context/ThemeContext';
+import { getApiBaseUrl } from '../utils/api';
 
 export default function Navbar({ user, onLogout }) {
   const themeContext = useContext(ThemeContext);
@@ -24,7 +25,8 @@ export default function Navbar({ user, onLogout }) {
       const token = localStorage.getItem('token');
       if (!token) return;
       
-      const response = await fetch('/api/chats', {
+      const baseUrl = getApiBaseUrl();
+      const response = await fetch(`${baseUrl}/api/chats`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -94,22 +96,14 @@ export default function Navbar({ user, onLogout }) {
             )}
             {user ? (
               <div className="flex items-center gap-4">
-                {user?.profileImage && !user.profileImage.includes('dicebear') ? (
-                  <img 
-                    src={user.profileImage.startsWith('http') ? user.profileImage : getImageUrl(user.profileImage)}
-                    alt={user.name}
-                    className="w-10 h-10 rounded-full object-cover border-2 border-blue-600 dark:border-blue-400 hover:border-blue-700 dark:hover:border-blue-500 transition-colors cursor-default"
-                    onError={(e) => {
-                      e.target.src = getAvatarUrl(user);
-                    }}
-                  />
-                ) : (
-                  <img 
-                    src={getAvatarUrl(user)}
-                    alt={user.name}
-                    className="w-10 h-10 rounded-full object-cover border-2 border-blue-600 dark:border-blue-400 hover:border-blue-700 dark:hover:border-blue-500 transition-colors cursor-default"
-                  />
-                )}
+                <img 
+                  src={user.profileImage ? getImageUrl(user.profileImage) : getAvatarUrl(user)}
+                  alt={user.name}
+                  className="w-10 h-10 rounded-full object-cover border-2 border-blue-600 dark:border-blue-400 hover:border-blue-700 dark:hover:border-blue-500 transition-colors cursor-default"
+                  onError={(e) => {
+                    e.target.src = getAvatarUrl(user);
+                  }}
+                />
                 <button 
                   onClick={onLogout}
                   className="flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors"

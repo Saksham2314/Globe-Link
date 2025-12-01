@@ -8,16 +8,8 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-// Configure storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadsDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
+// Use memory storage to get file buffer for base64 conversion
+const storage = multer.memoryStorage();
 
 // File filter for images and videos
 const fileFilter = (req, file, cb) => {
@@ -44,5 +36,19 @@ const upload = multer({
   },
   fileFilter: fileFilter
 });
+
+// Helper function to convert file buffer to base64 data URL
+export const fileToBase64 = (file) => {
+  if (!file || !file.buffer) return null;
+  const base64 = file.buffer.toString('base64');
+  const mimeType = file.mimetype;
+  return `data:${mimeType};base64,${base64}`;
+};
+
+// Helper function to check if a string is a base64 data URL
+export const isBase64Image = (str) => {
+  if (!str) return false;
+  return str.startsWith('data:image/') || str.startsWith('data:video/');
+};
 
 export default upload;
