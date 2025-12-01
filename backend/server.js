@@ -72,10 +72,39 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ message: 'Server is running' });
 });
 
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ message: 'Route not found' });
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Something went wrong!' });
+  console.error('Error:', err.message);
+  console.error('Stack:', err.stack);
+  
+  // Multer errors
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    return res.status(400).json({ message: 'File size exceeds 10MB limit' });
+  }
+  
+  if (err.code === 'LIMIT_FILE_COUNT') {
+    return res.status(400).json({ message: 'Too many files' });
+  }
+  
+  if (err.message === 'Only image and video files are allowed') {
+    return res.status(400).json({ message: err.message });
+  }
+  
+  // Mongoose errors
+  if (err.name === 'ValidationError') {
+    return res.status(400).json({ message: 'Validation error: ' + err.message });
+  }
+  
+  // Default error
+  res.status(err.status || 500).json({ 
+    message: err.message || 'Something went wrong!',
+    error: process.env.NODE_ENV === 'development' ? err : {} 
+  });
 });
 
 const PORT = process.env.PORT || 8000;

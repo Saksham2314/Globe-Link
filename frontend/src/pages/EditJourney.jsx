@@ -176,7 +176,20 @@ export default function EditJourney() {
     setError('');
 
     try {
+      // Validate form before sending
+      if (!formData.title || !formData.description || !formData.startLocation || !formData.endLocation) {
+        throw new Error('All required fields must be filled');
+      }
+
+      if (!formData.startDate || !formData.endDate) {
+        throw new Error('Start and end dates are required');
+      }
+
       const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Authentication token not found. Please login again.');
+      }
+
       const formDataObj = new FormData();
 
       formDataObj.append('title', formData.title);
@@ -195,6 +208,8 @@ export default function EditJourney() {
       });
 
       const baseUrl = getApiBaseUrl();
+      console.log('Sending update to:', `${baseUrl}/api/journeys/${id}`);
+      
       const response = await fetch(`${baseUrl}/api/journeys/${id}`, {
         method: 'PUT',
         headers: {
@@ -204,14 +219,16 @@ export default function EditJourney() {
       });
 
       const data = await response.json();
+      console.log('Response:', data);
 
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to update journey');
+        throw new Error(data.message || `Update failed with status ${response.status}`);
       }
 
       navigate('/dashboard/traveler');
     } catch (err) {
-      setError(err.message);
+      console.error('Error updating journey:', err);
+      setError(err.message || 'Something went wrong while updating');
     } finally {
       setSaving(false);
     }

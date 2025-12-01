@@ -171,10 +171,36 @@ export const updateJourney = async (req, res) => {
       });
     }
     
+    // Validate required fields
+    if (!title || !description || !startLocation || !endLocation || !startDate || !endDate) {
+      return res.status(400).json({ message: 'Please provide all required fields' });
+    }
+    
     // Calculate duration
-    const start = new Date(startDate);
-    const end = new Date(endDate);
+    let start = new Date(startDate);
+    let end = new Date(endDate);
+    
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      return res.status(400).json({ message: 'Invalid date format' });
+    }
+    
     const duration = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+    
+    // Parse highlights and transportation safely
+    let parsedHighlights = [];
+    let parsedTransportation = [];
+    
+    try {
+      if (highlights) {
+        parsedHighlights = typeof highlights === 'string' ? JSON.parse(highlights) : highlights;
+      }
+      if (transportation) {
+        parsedTransportation = typeof transportation === 'string' ? JSON.parse(transportation) : transportation;
+      }
+    } catch (parseErr) {
+      console.error('Error parsing highlights/transportation:', parseErr);
+      return res.status(400).json({ message: 'Invalid highlights or transportation format' });
+    }
     
     const updatedJourney = await Journey.findByIdAndUpdate(
       req.params.id,
@@ -183,17 +209,17 @@ export const updateJourney = async (req, res) => {
         description,
         startLocation,
         endLocation,
-        startDate: new Date(startDate),
-        endDate: new Date(endDate),
+        startDate: start,
+        endDate: end,
         duration,
-        highlights: highlights ? JSON.parse(highlights) : [],
+        highlights: parsedHighlights,
         budget,
-        transportation: transportation ? JSON.parse(transportation) : [],
+        transportation: parsedTransportation,
         images,
         videos,
         updatedAt: new Date()
       },
-      { new: true }
+      { new: true, runValidators: true }
     ).populate('traveler', 'name profileImage');
     
     res.status(200).json({
@@ -201,7 +227,8 @@ export const updateJourney = async (req, res) => {
       journey: updatedJourney
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('UpdateJourney Error:', error);
+    res.status(500).json({ message: error.message || 'Failed to update journey' });
   }
 };
 
