@@ -6,18 +6,18 @@ export default function Hero() {
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
   return (
-    <div className="relative w-full h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-purple-600 overflow-hidden">
-      {/* Animated background */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
-        <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
+    <div className="relative w-full min-h-screen md:h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-purple-600 overflow-hidden">
+      {/* Animated background - simplified for mobile */}
+      <div className="absolute inset-0 opacity-20 md:opacity-30">
+        <div className="absolute top-0 left-0 w-48 md:w-96 h-48 md:h-96 bg-white rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
+        <div className="absolute top-0 right-0 w-48 md:w-96 h-48 md:h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
+        <div className="absolute bottom-0 left-1/2 w-48 md:w-96 h-48 md:h-96 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
       </div>
 
-      {/* SVG Globe Background */}
+      {/* SVG Globe Background - hidden on very small screens */}
       <svg 
         viewBox="0 0 1200 600" 
-        className="absolute inset-0 w-full h-full opacity-20"
+        className="absolute inset-0 w-full h-full opacity-10 md:opacity-20 hidden sm:block"
         preserveAspectRatio="xMidYMid slice"
       >
         <defs>
@@ -36,45 +36,50 @@ export default function Hero() {
         </g>
       </svg>
 
-      <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4">
-        <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 drop-shadow-lg">
+      <div className="relative z-10 min-h-screen md:h-full flex flex-col items-center justify-center text-center px-4 py-8 md:py-0">
+        {/* Main Title */}
+        <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-3 md:mb-6 drop-shadow-lg leading-tight">
           Globe Link
         </h1>
-        <p className="text-2xl md:text-3xl text-white mb-8 drop-shadow-lg max-w-2xl">
+        
+        {/* Main description */}
+        <p className="text-lg sm:text-xl md:text-3xl text-white mb-4 md:mb-8 drop-shadow-lg max-w-2xl leading-snug">
           Connect with travelers. Share experiences. Plan adventures.
         </p>
-        <p className="text-lg text-blue-100 mb-12 max-w-xl">
+        
+        {/* Secondary description */}
+        <p className="text-sm sm:text-base md:text-lg text-blue-100 mb-8 md:mb-12 max-w-xl px-2">
           Find travelers who've taken your dream journey and get real insights from those who've been there.
         </p>
         
-        <div className="flex gap-4 flex-col sm:flex-row">
-          <a href="#search-section" onClick={scrollToSearch} className="px-8 py-4 bg-white text-blue-600 font-bold rounded-lg hover:bg-gray-100 transition-colors shadow-lg">
+        {/* CTA Buttons */}
+        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 w-full sm:w-auto mb-8 md:mb-16">
+          <button onClick={scrollToSearch} className="w-full sm:w-auto px-6 sm:px-8 py-3 md:py-4 bg-white text-blue-600 font-bold rounded-lg hover:bg-gray-100 active:bg-gray-200 transition-colors shadow-lg text-sm sm:text-base">
             Explore Journeys
-          </a>
-          <a href="/register" className="px-8 py-4 bg-blue-700 text-white font-bold rounded-lg hover:bg-blue-800 transition-colors shadow-lg border-2 border-white">
+          </button>
+          <a href="/register" className="w-full sm:w-auto px-6 sm:px-8 py-3 md:py-4 bg-blue-700 text-white font-bold rounded-lg hover:bg-blue-800 active:bg-blue-900 transition-colors shadow-lg border-2 border-white text-sm sm:text-base text-center">
             Get Started
           </a>
         </div>
 
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl">
-          <div className="bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-6 text-white">
-            <div className="text-4xl mb-3">✈️</div>
-            <h3 className="font-bold text-lg mb-2">Share Journeys</h3>
-            <p className="text-sm text-blue-100">Document your travels and share with the community</p>
+        {/* Feature cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 w-full max-w-4xl">
+          <div className="bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-4 md:p-6 text-white">
+            <div className="text-3xl md:text-4xl mb-2 md:mb-3">✈️</div>
+            <h3 className="font-bold text-base md:text-lg mb-1 md:mb-2">Share Journeys</h3>
+            <p className="text-xs md:text-sm text-blue-100">Document your travels and share with the community</p>
           </div>
-          <div className="bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-6 text-white">
-            <div className="text-4xl mb-3">🔍</div>
-            <h3 className="font-bold text-lg mb-2">Find Experts</h3>
-            <p className="text-sm text-blue-100">Get insights from experienced travelers</p>
+          <div className="bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-4 md:p-6 text-white">
+            <div className="text-3xl md:text-4xl mb-2 md:mb-3">🔍</div>
+            <h3 className="font-bold text-base md:text-lg mb-1 md:mb-2">Find Experts</h3>
+            <p className="text-xs md:text-sm text-blue-100">Get insights from experienced travelers</p>
           </div>
-          <div className="bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-6 text-white">
-            <div className="text-4xl mb-3">💬</div>
-            <h3 className="font-bold text-lg mb-2">Real Connections</h3>
-            <p className="text-sm text-blue-100">Chat directly with fellow travelers</p>
+          <div className="bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-4 md:p-6 text-white sm:col-span-2 md:col-span-1">
+            <div className="text-3xl md:text-4xl mb-2 md:mb-3">💬</div>
+            <h3 className="font-bold text-base md:text-lg mb-1 md:mb-2">Real Connections</h3>
+            <p className="text-xs md:text-sm text-blue-100">Chat directly with fellow travelers</p>
           </div>
         </div>
-
-        {/* single pretty Explore Journeys CTA retained above */}
       </div>
     </div>
   );

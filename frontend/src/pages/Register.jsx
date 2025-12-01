@@ -77,71 +77,71 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-3 sm:px-4 py-4 sm:py-8">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
-          <div className="flex items-center justify-center gap-3 mb-8">
-            <Globe className="text-blue-600" size={32} />
-            <h1 className="text-3xl font-bold text-gray-900">Globe Link</h1>
+        <div className="bg-white rounded-2xl shadow-2xl p-5 sm:p-8">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 mb-6 sm:mb-8">
+            <Globe className="text-blue-600 w-7 h-7 sm:w-8 sm:h-8" />
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Globe Link</h1>
           </div>
 
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Create Account</h2>
-          <p className="text-gray-600 mb-6">Join our travel community today</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">Create Account</h2>
+          <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">Join our travel community today</p>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-6 text-sm">
+            <div className="bg-red-50 border border-red-200 text-red-600 px-3 sm:px-4 py-2 sm:py-3 rounded-lg mb-4 sm:mb-6 text-xs sm:text-sm">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">Full Name</label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Your name"
-                className="input-field"
+                className="input-field text-sm sm:text-base h-10 sm:h-11"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">Email</label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="your@email.com"
-                className="input-field"
+                className="input-field text-sm sm:text-base h-10 sm:h-11"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">Password</label>
               <input
                 type="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="••••••••"
-                className="input-field"
+                className="input-field text-sm sm:text-base h-10 sm:h-11"
                 required
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Gender</label>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">Gender</label>
                 <select
                   name="gender"
                   value={formData.gender}
                   onChange={handleChange}
-                  className="input-field"
+                  className="input-field text-sm sm:text-base h-10 sm:h-11"
                   required
                 >
                   <option value="">Select Gender</option>
@@ -152,12 +152,12 @@ export default function Register() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">I am a:</label>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">I am a:</label>
                 <select
                   name="userType"
                   value={formData.userType}
                   onChange={handleChange}
-                  className="input-field"
+                  className="input-field text-sm sm:text-base h-10 sm:h-11"
                 >
                   <option value="seeker">Seeker</option>
                   <option value="traveler">Traveler</option>
@@ -166,7 +166,7 @@ export default function Register() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Profile Photo</label>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">Profile Photo</label>
               <div className="relative">
                 <input
                   type="file"
@@ -177,16 +177,16 @@ export default function Register() {
                 />
                 <label
                   htmlFor="profile-upload"
-                  className="flex items-center justify-center gap-2 w-full border-2 border-dashed border-blue-300 rounded-lg p-4 cursor-pointer hover:bg-blue-50 transition"
+                  className="flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-2 w-full border-2 border-dashed border-blue-300 rounded-lg p-3 sm:p-4 cursor-pointer hover:bg-blue-50 transition"
                 >
-                  <Upload size={20} className="text-blue-600" />
-                  <span className="text-sm text-gray-600">
+                  <Upload size={18} className="sm:w-5 sm:h-5 text-blue-600 flex-shrink-0" />
+                  <span className="text-xs sm:text-sm text-gray-600 text-center">
                     {imagePreview ? 'Change photo' : 'Upload photo (Max 10MB)'}
                   </span>
                 </label>
                 {imagePreview && (
-                  <div className="mt-3 flex justify-center">
-                    <img src={imagePreview} alt="Preview" className="w-20 h-20 rounded-full object-cover" />
+                  <div className="mt-2 sm:mt-3 flex justify-center">
+                    <img src={imagePreview} alt="Preview" className="w-16 sm:w-20 h-16 sm:h-20 rounded-full object-cover" />
                   </div>
                 )}
               </div>
@@ -195,14 +195,14 @@ export default function Register() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full btn-primary flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full btn-primary flex items-center justify-center gap-2 h-10 sm:h-11 text-sm sm:text-base disabled:opacity-50 mt-2 sm:mt-4"
             >
               {loading ? 'Creating Account...' : 'Create Account'}
-              <ArrowRight size={20} />
+              <ArrowRight size={18} className="sm:w-5 sm:h-5" />
             </button>
           </form>
 
-          <p className="text-center text-gray-600 mt-6">
+          <p className="text-center text-gray-600 mt-4 sm:mt-6 text-xs sm:text-sm">
             Already have an account?{' '}
             <Link to="/login" className="text-blue-600 font-semibold hover:underline">
               Sign in

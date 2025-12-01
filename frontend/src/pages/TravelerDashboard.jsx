@@ -89,80 +89,80 @@ export default function TravelerDashboard() {
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-3 sm:p-6">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2">Traveler Dashboard</h1>
-        <p className="text-gray-600 mb-8">Manage and track your journeys</p>
+        <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">Traveler Dashboard</h1>
+        <p className="text-xs sm:text-base text-gray-600 mb-6 sm:mb-10">Manage and track your journeys</p>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6 mb-6 sm:mb-10">
+          <div className="bg-white rounded-lg shadow p-4 sm:p-6 border-l-4 border-blue-500">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-600 text-sm">Total Journeys</p>
-                <p className="text-3xl font-bold text-gray-900">{stats.totalJourneys}</p>
+                <p className="text-gray-600 text-xs sm:text-sm">Total Journeys</p>
+                <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-1">{stats.totalJourneys}</p>
               </div>
-              <Plane className="text-blue-500" size={40} />
+              <Plane className="text-blue-500 w-8 sm:w-10 h-8 sm:h-10 flex-shrink-0" />
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
+          <div className="bg-white rounded-lg shadow p-4 sm:p-6 border-l-4 border-green-500">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-600 text-sm">Total Views</p>
-                <p className="text-3xl font-bold text-gray-900">{stats.totalViews}</p>
+                <p className="text-gray-600 text-xs sm:text-sm">Total Views</p>
+                <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-1">{stats.totalViews}</p>
               </div>
-              <Eye className="text-green-500" size={40} />
+              <Eye className="text-green-500 w-8 sm:w-10 h-8 sm:h-10 flex-shrink-0" />
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-purple-500">
+          <div className="bg-white rounded-lg shadow p-4 sm:p-6 border-l-4 border-purple-500">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-600 text-sm">Total Messages</p>
-                <p className="text-3xl font-bold text-gray-900">{stats.totalMessages}</p>
+                <p className="text-gray-600 text-xs sm:text-sm">Total Messages</p>
+                <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-1">{stats.totalMessages}</p>
               </div>
-              <MessageSquare className="text-purple-500" size={40} />
+              <MessageSquare className="text-purple-500 w-8 sm:w-10 h-8 sm:h-10 flex-shrink-0" />
             </div>
           </div>
         </div>
 
         {/* Journeys List */}
         <div className="bg-white rounded-lg shadow">
-          <div className="p-6 border-b">
-            <h2 className="text-2xl font-bold text-gray-900">Your Journeys</h2>
+          <div className="p-4 sm:p-6 border-b">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Your Journeys</h2>
           </div>
 
           {journeys.length === 0 ? (
-            <div className="p-6 text-center text-gray-500">
+            <div className="p-4 sm:p-6 text-center text-gray-500 text-xs sm:text-base">
               <p>No journeys yet. <a href="/post-journey" className="text-blue-600 font-semibold">Post your first journey</a></p>
             </div>
           ) : (
             <div className="divide-y">
               {journeys.map(journey => (
-                <div key={journey._id} className="p-6 hover:bg-gray-50 transition">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold text-gray-900">{journey.title}</h3>
-                      <div className="flex items-center gap-4 mt-2 text-gray-600">
-                        <div className="flex items-center gap-1">
-                          <MapPin size={16} />
-                          <span>{journey.startLocation} → {journey.endLocation}</span>
+                <div key={journey._id} className="p-3 sm:p-6 hover:bg-gray-50 transition">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-900 truncate">{journey.title}</h3>
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mt-2 text-xs sm:text-base text-gray-600 flex-wrap">
+                        <div className="flex items-center gap-1 flex-shrink-0">
+                          <MapPin size={14} className="sm:w-4 sm:h-4" />
+                          <span className="truncate">{journey.startLocation} → {journey.endLocation}</span>
                         </div>
-                        <span>{journey.duration} days</span>
-                        <div className="flex items-center gap-1">
-                          <Eye size={16} />
+                        <span className="flex-shrink-0">{journey.duration} days</span>
+                        <div className="flex items-center gap-1 flex-shrink-0">
+                          <Eye size={14} className="sm:w-4 sm:h-4" />
                           <span>{journey.views} views</span>
                         </div>
                       </div>
                       {journey.images && journey.images.length > 0 && (
-                        <div className="flex gap-2 mt-3">
+                        <div className="flex gap-1.5 sm:gap-2 mt-3 overflow-x-auto">
                           {journey.images.map((img, idx) => (
                             <img 
                               key={idx} 
                               src={getImageUrl(img)} 
                               alt="Journey" 
-                              className="w-16 h-16 rounded object-cover" 
+                              className="w-12 sm:w-16 h-12 sm:h-16 rounded object-cover flex-shrink-0" 
                               onError={(e) => {
                                 e.target.style.display = 'none';
                               }} 
@@ -171,18 +171,20 @@ export default function TravelerDashboard() {
                         </div>
                       )}
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-1.5 sm:gap-2 flex-shrink-0">
                       <button 
                         onClick={() => navigate(`/edit-journey/${journey._id}`)}
-                        className="p-2 hover:bg-blue-100 rounded text-blue-600"
+                        className="p-1.5 sm:p-2 hover:bg-blue-100 rounded text-blue-600 transition-colors"
+                        title="Edit journey"
                       >
-                        <Edit2 size={20} />
+                        <Edit2 size={18} className="sm:w-5 sm:h-5" />
                       </button>
                       <button 
                         onClick={() => deleteJourney(journey._id)}
-                        className="p-2 hover:bg-red-100 rounded text-red-600"
+                        className="p-1.5 sm:p-2 hover:bg-red-100 rounded text-red-600 transition-colors"
+                        title="Delete journey"
                       >
-                        <Trash2 size={20} />
+                        <Trash2 size={18} className="sm:w-5 sm:h-5" />
                       </button>
                     </div>
                   </div>
