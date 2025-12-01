@@ -69,8 +69,8 @@ export const getJourneys = async (req, res) => {
       query.$or = [
         { title: { $regex: search, $options: 'i' } },
         { description: { $regex: search, $options: 'i' } },
-        { highlights: { $regex: search, $options: 'i' } },
-        { transportation: { $regex: search, $options: 'i' } }
+        { highlights: { $elemMatch: { $regex: search, $options: 'i' } } },
+        { transportation: { $elemMatch: { $regex: search, $options: 'i' } } }
       ];
     }
     // Handle general location filtering (either from or to)
