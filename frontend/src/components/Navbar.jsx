@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { MapPin, MessageSquare, LogOut, Plus, BarChart3, Moon, Sun } from 'lucide-react';
 import { getImageUrl, getAvatarUrl } from '../utils/index.js';
 import { ThemeContext } from '../context/ThemeContext';
@@ -8,6 +8,38 @@ export default function Navbar({ user, onLogout }) {
   const themeContext = useContext(ThemeContext);
   const isDark = themeContext?.isDark || false;
   const toggleTheme = themeContext?.toggleTheme || (() => {});
+  const [unreadCount, setUnreadCount] = useState(0);
+  
+  useEffect(() => {
+    if (user) {
+      fetchUnreadCount();
+      // Refresh unread count every 3 seconds
+      const interval = setInterval(fetchUnreadCount, 3000);
+      return () => clearInterval(interval);
+    }
+  }, [user]);
+
+  const fetchUnreadCount = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      
+      const response = await fetch('/api/chats', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      const data = await response.json();
+      if (response.ok && data.chats) {
+        let totalMessages = 0;
+        data.chats.forEach(chat => {
+          totalMessages += chat.messages?.length || 0;
+        });
+        setUnreadCount(totalMessages);
+      }
+    } catch (err) {
+      console.error('Error fetching unread count:', err);
+    }
+  };
   
   const getDashboardLink = () => {
     if (!user) return null;
@@ -29,8 +61,13 @@ export default function Navbar({ user, onLogout }) {
             </Link>
             {user && (
               <>
-                <Link to="/chats" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">
+                <Link to="/chats" className="relative text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">
                   <MessageSquare size={20} />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </span>
+                  )}
                 </Link>
                 <Link to={getDashboardLink()} className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">
                   <BarChart3 size={20} />
