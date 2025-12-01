@@ -41,14 +41,14 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950">
       <Hero />
 
       <div id="search-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <SearchBar onSearch={handleSearch} />
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-600 px-6 py-4 rounded-lg mb-8">
+          <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-6 py-4 rounded-lg mb-8">
             {error}
           </div>
         )}

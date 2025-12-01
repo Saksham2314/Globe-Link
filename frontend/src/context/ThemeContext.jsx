@@ -8,23 +8,34 @@ export function ThemeProvider({ children }) {
     const saved = localStorage.getItem('theme');
     if (saved) return saved === 'dark';
     // Check system preference
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (typeof window !== 'undefined') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return false;
   });
 
   useEffect(() => {
     // Save preference to localStorage
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
     
-    // Update HTML element
+    // Update HTML element with dark class
+    const htmlElement = document.documentElement;
     if (isDark) {
-      document.documentElement.classList.add('dark');
+      htmlElement.classList.add('dark');
     } else {
-      document.documentElement.classList.remove('dark');
+      htmlElement.classList.remove('dark');
+    }
+    
+    // Also update document style
+    if (isDark) {
+      document.body.style.colorScheme = 'dark';
+    } else {
+      document.body.style.colorScheme = 'light';
     }
   }, [isDark]);
 
   const toggleTheme = () => {
-    setIsDark(!isDark);
+    setIsDark(prev => !prev);
   };
 
   return (

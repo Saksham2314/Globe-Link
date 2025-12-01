@@ -5,7 +5,10 @@ import { getImageUrl, getAvatarUrl } from '../utils/index.js';
 import { ThemeContext } from '../context/ThemeContext';
 
 export default function Navbar({ user, onLogout }) {
-  const { isDark, toggleTheme } = useContext(ThemeContext);
+  const themeContext = useContext(ThemeContext);
+  const isDark = themeContext?.isDark || false;
+  const toggleTheme = themeContext?.toggleTheme || (() => {});
+  
   const getDashboardLink = () => {
     if (!user) return null;
     return user.userType === 'traveler' ? '/dashboard/traveler' : '/dashboard/seeker';
