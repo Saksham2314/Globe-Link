@@ -185,6 +185,18 @@ export default function EditJourney() {
         throw new Error('Start and end dates are required');
       }
 
+      // Validate date format and logic
+      const startDate = new Date(formData.startDate);
+      const endDate = new Date(formData.endDate);
+      
+      if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+        throw new Error('Invalid date format');
+      }
+      
+      if (endDate < startDate) {
+        throw new Error('End date must be after start date');
+      }
+
       const token = localStorage.getItem('token');
       if (!token) {
         throw new Error('Authentication token not found. Please login again.');

@@ -205,16 +205,42 @@ export const updateJourney = async (req, res) => {
       });
     }
     
-    // Calculate duration
-    let start = new Date(startDate);
-    let end = new Date(endDate);
+    // Calculate duration - Handle date strings correctly
+    console.log('Raw dates from form:', { startDate, endDate });
     
-    console.log('Start Date:', startDate, '-> Parsed:', start);
-    console.log('End Date:', endDate, '-> Parsed:', end);
+    // Parse dates properly from YYYY-MM-DD format
+    let start, end;
+    try {
+      // If date is a string like "2025-12-01", parse it carefully
+      if (typeof startDate === 'string') {
+        // Split to avoid timezone issues
+        const [startYear, startMonth, startDay] = startDate.split('-');
+        start = new Date(parseInt(startYear), parseInt(startMonth) - 1, parseInt(startDay));
+      } else {
+        start = new Date(startDate);
+      }
+      
+      if (typeof endDate === 'string') {
+        const [endYear, endMonth, endDay] = endDate.split('-');
+        end = new Date(parseInt(endYear), parseInt(endMonth) - 1, parseInt(endDay));
+      } else {
+        end = new Date(endDate);
+      }
+    } catch (dateErr) {
+      console.error('Date parsing error:', dateErr);
+      return res.status(400).json({ message: 'Invalid date format. Please use YYYY-MM-DD format.' });
+    }
+    
+    console.log('Parsed dates:', { start: start.toISOString(), end: end.toISOString() });
     
     if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-      console.log('Invalid date format');
+      console.log('Invalid date after parsing');
       return res.status(400).json({ message: 'Invalid date format' });
+    }
+    
+    // Ensure end date is after start date
+    if (end < start) {
+      return res.status(400).json({ message: 'End date must be after start date' });
     }
     
     const duration = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
