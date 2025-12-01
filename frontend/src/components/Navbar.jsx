@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useContext, useState, useEffect } from 'react';
 import { MapPin, MessageSquare, LogOut, Plus, BarChart3, Moon, Sun } from 'lucide-react';
-import { getImageUrl, getAvatarUrl } from '../utils/index.js';
+import { getImageUrl, getAvatarUrl, API_BASE_URL } from '../utils/index.js';
 import { ThemeContext } from '../context/ThemeContext';
 
 export default function Navbar({ user, onLogout }) {
@@ -24,7 +24,7 @@ export default function Navbar({ user, onLogout }) {
       const token = localStorage.getItem('token');
       if (!token) return;
       
-      const response = await fetch('/api/chats', {
+      const response = await fetch(`${API_BASE_URL}/chats`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       

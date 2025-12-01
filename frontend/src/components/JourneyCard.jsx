@@ -1,7 +1,7 @@
 import { MapPin, MessageCircle, User, Eye, Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { getImageUrl, getAvatarUrl } from '../utils/index.js';
+import { getImageUrl, getAvatarUrl, API_BASE_URL } from '../utils/index.js';
 
 export default function JourneyCard({ journey }) {
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ export default function JourneyCard({ journey }) {
         return;
       }
       
-      const endpoint = isSaved ? '/api/journeys/unsave' : '/api/journeys/save';
+      const endpoint = isSaved ? `${API_BASE_URL}/journeys/unsave` : `${API_BASE_URL}/journeys/save`;
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Heart, MessageSquare, TrendingUp } from 'lucide-react';
-import { getImageUrl, getAvatarUrl } from '../utils/index.js';
+import { getImageUrl, getAvatarUrl, API_BASE_URL } from '../utils/index.js';
 
 export default function SeekerDashboard() {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ export default function SeekerDashboard() {
       const token = localStorage.getItem('token');
       
       // Fetch chats
-      const chatResponse = await fetch('/api/chats', {
+      const chatResponse = await fetch(`${API_BASE_URL}/chats`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
@@ -41,7 +41,7 @@ export default function SeekerDashboard() {
       const chatsWithMessages = await Promise.all(
         (chatData.chats || []).map(async (chat) => {
           try {
-            const messageResponse = await fetch(`/api/chats/${chat._id}`, {
+            const messageResponse = await fetch(`${API_BASE_URL}/chats/${chat._id}`, {
               headers: { 'Authorization': `Bearer ${token}` }
             });
             const messageData = await messageResponse.json();
@@ -58,7 +58,7 @@ export default function SeekerDashboard() {
       setChats(chatsWithMessages);
       
       // Fetch saved journeys count
-      const savedResponse = await fetch('/api/journeys/saved/all', {
+      const savedResponse = await fetch(`${API_BASE_URL}/journeys/saved/all`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -66,7 +66,7 @@ export default function SeekerDashboard() {
       const totalFavorites = savedData.count || 0;
       
       // Fetch viewed journeys count
-      const viewedResponse = await fetch('/api/journeys/viewed/count', {
+      const viewedResponse = await fetch(`${API_BASE_URL}/journeys/viewed/count`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       

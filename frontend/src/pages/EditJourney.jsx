@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MapPin, Calendar, DollarSign, X, Upload, Play, Loader } from 'lucide-react';
-import { getImageUrl } from '../utils/index.js';
+import { getImageUrl, API_BASE_URL } from '../utils/index.js';
 
 export default function EditJourney() {
   const { id } = useParams();
@@ -39,7 +39,7 @@ export default function EditJourney() {
   const fetchJourney = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/journeys/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/journeys/${id}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
@@ -192,7 +192,7 @@ export default function EditJourney() {
         formDataObj.append('files', file);
       });
 
-      const response = await fetch(`/api/journeys/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/journeys/${id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`

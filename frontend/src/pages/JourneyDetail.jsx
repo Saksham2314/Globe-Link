@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MapPin, Calendar, User, MessageCircle, Loader, Play, ImageIcon } from 'lucide-react';
-import { getImageUrl, getAvatarUrl } from '../utils/index.js';
+import { getImageUrl, getAvatarUrl, API_BASE_URL } from '../utils/index.js';
 
 export default function JourneyDetail() {
   const { id } = useParams();
@@ -33,7 +33,7 @@ export default function JourneyDetail() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`/api/journeys/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/journeys/${id}`, {
         method: 'GET',
         headers
       });
@@ -60,7 +60,7 @@ export default function JourneyDetail() {
     setCreatingChat(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/chats', {
+      const response = await fetch(`${API_BASE_URL}/chats`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

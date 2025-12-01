@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Plane, MessageSquare, Eye, Trash2, Edit2 } from 'lucide-react';
-import { getImageUrl, getAvatarUrl } from '../utils/index.js';
+import { getImageUrl, getAvatarUrl, API_BASE_URL } from '../utils/index.js';
 
 export default function TravelerDashboard() {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ export default function TravelerDashboard() {
       const token = localStorage.getItem('token');
       
       // Fetch journeys
-      const journeyResponse = await fetch('/api/journeys/my-journeys', {
+      const journeyResponse = await fetch(`${API_BASE_URL}/journeys/my-journeys`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
@@ -33,7 +33,7 @@ export default function TravelerDashboard() {
       setJourneys(journeyData.journeys || []);
       
       // Fetch chats to count messages
-      const chatResponse = await fetch('/api/chats', {
+      const chatResponse = await fetch(`${API_BASE_URL}/chats`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -71,7 +71,7 @@ export default function TravelerDashboard() {
     
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/journeys/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/journeys/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

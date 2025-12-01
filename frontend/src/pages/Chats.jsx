@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { MessageCircle, Loader, X, Send } from 'lucide-react';
-import { getImageUrl, getAvatarUrl } from '../utils/index.js';
+import { getImageUrl, getAvatarUrl, API_BASE_URL } from '../utils/index.js';
 
 export default function Chats() {
   const location = useLocation();
@@ -42,7 +42,7 @@ export default function Chats() {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/chats', {
+      const response = await fetch(`${API_BASE_URL}/chats`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -65,7 +65,7 @@ export default function Chats() {
   const fetchMessages = async (chatId) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/chats/${chatId}`, {
+      const response = await fetch(`${API_BASE_URL}/chats/${chatId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -87,7 +87,7 @@ export default function Chats() {
     setSending(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/chats/${selectedChat._id}/message`, {
+      const response = await fetch(`${API_BASE_URL}/chats/${selectedChat._id}/message`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
