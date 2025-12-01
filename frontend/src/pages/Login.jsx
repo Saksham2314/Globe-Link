@@ -36,7 +36,9 @@ export default function Login() {
 
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
-      navigate('/journeys');
+      
+      // Reload page to trigger navbar update
+      window.location.href = '/journeys';
     } catch (err) {
       setError(err.message);
     } finally {

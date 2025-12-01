@@ -20,7 +20,9 @@ connectDB();
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175'],
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://globe-link-frontend.vercel.app', 'https://globe-link.vercel.app']
+    : ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175'],
   credentials: true
 }));
 app.use(express.json());

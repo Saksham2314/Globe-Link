@@ -30,6 +30,11 @@ export default function Chats() {
   useEffect(() => {
     if (selectedChat) {
       fetchMessages(selectedChat._id);
+      // Refresh messages every 2 seconds to get new messages
+      const interval = setInterval(() => {
+        fetchMessages(selectedChat._id);
+      }, 2000);
+      return () => clearInterval(interval);
     }
   }, [selectedChat]);
 
@@ -95,6 +100,8 @@ export default function Chats() {
       if (response.ok) {
         setMessages([...messages, data.message]);
         setNewMessage('');
+        // Refresh chats list to update message count
+        fetchChats();
       }
     } catch (err) {
       alert('Error sending message: ' + err.message);

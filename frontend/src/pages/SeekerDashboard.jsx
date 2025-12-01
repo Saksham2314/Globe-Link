@@ -16,6 +16,13 @@ export default function SeekerDashboard() {
 
   useEffect(() => {
     fetchDashboardData();
+    
+    // Refresh dashboard every 3 seconds to show updated message counts
+    const interval = setInterval(() => {
+      fetchDashboardData();
+    }, 3000);
+    
+    return () => clearInterval(interval);
   }, []);
 
   const fetchDashboardData = async () => {
