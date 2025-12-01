@@ -34,9 +34,9 @@ export const createJourney = async (req, res) => {
       endDate: new Date(endDate),
       duration: Math.ceil((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24)),
       traveler: req.user.id,
-      highlights: Array.isArray(highlights) ? highlights : [highlights],
+      highlights: highlights ? JSON.parse(highlights) : [],
       budget,
-      transportation: Array.isArray(transportation) ? transportation : [transportation],
+      transportation: transportation ? JSON.parse(transportation) : [],
       images,
       videos
     });
