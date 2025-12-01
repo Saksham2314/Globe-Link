@@ -142,49 +142,83 @@ export const getJourneyById = async (req, res) => {
 
 export const updateJourney = async (req, res) => {
   try {
+    console.log('=== UPDATE JOURNEY REQUEST ===');
+    console.log('Journey ID:', req.params.id);
+    console.log('User ID:', req.user._id);
+    
     let journey = await Journey.findById(req.params.id);
     
     if (!journey) {
+      console.log('Journey not found:', req.params.id);
       return res.status(404).json({ message: 'Journey not found' });
     }
     
-    if (journey.traveler.toString() !== req.user.id) {
+    console.log('Traveler ID from DB:', journey.traveler.toString());
+    console.log('User ID from Auth:', req.user._id.toString());
+    
+    if (journey.traveler.toString() !== req.user._id.toString()) {
+      console.log('Authorization failed - traveler mismatch');
       return res.status(403).json({ message: 'Not authorized to update this journey' });
     }
     
     const { title, description, startLocation, endLocation, startDate, endDate, highlights, budget, transportation, existingImages } = req.body;
     
-    // Handle file uploads - keep existing base64 images and add new ones
-    let images = existingImages ? JSON.parse(existingImages) : [];
-    const videos = [];
-    
-    if (req.files) {
-      req.files.forEach(file => {
-        const base64Data = fileToBase64(file);
-        if (base64Data) {
-          if (file.mimetype.startsWith('image/')) {
-            images.push(base64Data);
-          } else if (file.mimetype.startsWith('video/')) {
-            videos.push(base64Data);
-          }
-        }
-      });
-    }
+    console.log('Form Data:', { title, description, startLocation, endLocation, startDate, endDate, budget });
     
     // Validate required fields
     if (!title || !description || !startLocation || !endLocation || !startDate || !endDate) {
+      console.log('Missing required fields');
       return res.status(400).json({ message: 'Please provide all required fields' });
+    }
+    
+    // Handle file uploads - keep existing base64 images and add new ones
+    let images = [];
+    const videos = [];
+    
+    if (existingImages) {
+      try {
+        images = typeof existingImages === 'string' ? JSON.parse(existingImages) : existingImages;
+        console.log('Existing images count:', Array.isArray(images) ? images.length : 0);
+      } catch (e) {
+        console.log('Error parsing existing images:', e.message);
+        images = [];
+      }
+    }
+    
+    if (req.files && req.files.length > 0) {
+      console.log('Processing', req.files.length, 'new files');
+      req.files.forEach(file => {
+        try {
+          const base64Data = fileToBase64(file);
+          if (base64Data) {
+            if (file.mimetype.startsWith('image/')) {
+              images.push(base64Data);
+              console.log('Added image:', file.originalname);
+            } else if (file.mimetype.startsWith('video/')) {
+              videos.push(base64Data);
+              console.log('Added video:', file.originalname);
+            }
+          }
+        } catch (fileErr) {
+          console.error('Error processing file:', fileErr);
+        }
+      });
     }
     
     // Calculate duration
     let start = new Date(startDate);
     let end = new Date(endDate);
     
+    console.log('Start Date:', startDate, '-> Parsed:', start);
+    console.log('End Date:', endDate, '-> Parsed:', end);
+    
     if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      console.log('Invalid date format');
       return res.status(400).json({ message: 'Invalid date format' });
     }
     
     const duration = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+    console.log('Duration:', duration, 'days');
     
     // Parse highlights and transportation safely
     let parsedHighlights = [];
@@ -192,15 +226,32 @@ export const updateJourney = async (req, res) => {
     
     try {
       if (highlights) {
-        parsedHighlights = typeof highlights === 'string' ? JSON.parse(highlights) : highlights;
+        parsedHighlights = typeof highlights === 'string' ? JSON.parse(highlights) : Array.isArray(highlights) ? highlights : [];
+        console.log('Highlights:', parsedHighlights);
       }
       if (transportation) {
-        parsedTransportation = typeof transportation === 'string' ? JSON.parse(transportation) : transportation;
+        parsedTransportation = typeof transportation === 'string' ? JSON.parse(transportation) : Array.isArray(transportation) ? transportation : [];
+        console.log('Transportation:', parsedTransportation);
       }
     } catch (parseErr) {
       console.error('Error parsing highlights/transportation:', parseErr);
       return res.status(400).json({ message: 'Invalid highlights or transportation format' });
     }
+    
+    console.log('Attempting to update journey with:', {
+      title,
+      description,
+      startLocation,
+      endLocation,
+      startDate: start.toISOString(),
+      endDate: end.toISOString(),
+      duration,
+      budget,
+      highlightsCount: parsedHighlights.length,
+      transportationCount: parsedTransportation.length,
+      imagesCount: images.length,
+      videosCount: videos.length
+    });
     
     const updatedJourney = await Journey.findByIdAndUpdate(
       req.params.id,
@@ -219,15 +270,24 @@ export const updateJourney = async (req, res) => {
         videos,
         updatedAt: new Date()
       },
-      { new: true, runValidators: true }
+      { new: true, runValidators: false }
     ).populate('traveler', 'name profileImage');
     
+    if (!updatedJourney) {
+      console.log('Update failed - returned null');
+      return res.status(500).json({ message: 'Failed to update journey' });
+    }
+    
+    console.log('Journey updated successfully');
     res.status(200).json({
       success: true,
       journey: updatedJourney
     });
   } catch (error) {
-    console.error('UpdateJourney Error:', error);
+    console.error('=== UPDATE JOURNEY ERROR ===');
+    console.error('Error Message:', error.message);
+    console.error('Error Type:', error.name);
+    console.error('Full Error:', error);
     res.status(500).json({ message: error.message || 'Failed to update journey' });
   }
 };

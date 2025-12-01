@@ -18,8 +18,11 @@ export const protect = async (req, res, next) => {
     if (!req.user) {
       return res.status(404).json({ message: 'User not found' });
     }
+    // Ensure we have the string ID available
+    req.userId = req.user._id.toString();
     next();
   } catch (error) {
+    console.error('Auth error:', error.message);
     return res.status(401).json({ message: 'Not authorized to access this route' });
   }
 };
