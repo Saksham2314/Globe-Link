@@ -1,4 +1,4 @@
-import { Filter } from "lucide-react";
+import { Search, Filter, MapPin } from "lucide-react";
 import { useState } from 'react';
 
 export default function SearchBar({ onSearch, onFilter }) {
