@@ -183,14 +183,15 @@ export const updateJourney = async (req, res) => {
         description,
         startLocation,
         endLocation,
-        startDate,
-        endDate,
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
         duration,
         highlights: highlights ? JSON.parse(highlights) : [],
         budget,
         transportation: transportation ? JSON.parse(transportation) : [],
         images,
-        videos
+        videos,
+        updatedAt: new Date()
       },
       { new: true }
     ).populate('traveler', 'name profileImage');
