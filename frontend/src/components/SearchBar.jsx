@@ -1,4 +1,4 @@
-import { Search, Filter, MapPin } from 'lucide-react';
+import { Filter } from "lucide-react";
 import { useState } from 'react';
 
 export default function SearchBar({ onSearch, onFilter }) {
@@ -77,9 +77,8 @@ export default function SearchBar({ onSearch, onFilter }) {
                 placeholder="Search journeys..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full input-field pl-10 py-2.5 sm:py-3 text-sm sm:text-base"
+                className="w-full input-field py-2.5 sm:py-3 text-sm sm:text-base"
               />
-              <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             </div>
             <button type="submit" className="w-full sm:w-auto btn-primary py-2.5 sm:py-3 text-sm sm:text-base font-medium">
               Search
@@ -87,25 +86,23 @@ export default function SearchBar({ onSearch, onFilter }) {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-            <div className="relative">
+            <div>
               <input
                 type="text"
                 placeholder="From (e.g., India)..."
                 value={fromLocation}
                 onChange={(e) => setFromLocation(e.target.value)}
-                className="w-full input-field pl-10 py-2.5 sm:py-3 text-sm sm:text-base"
+                className="w-full input-field py-2.5 sm:py-3 text-sm sm:text-base"
               />
-              <MapPin size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             </div>
-            <div className="relative">
+            <div>
               <input
                 type="text"
                 placeholder="To (e.g., Switzerland)..."
                 value={toLocation}
                 onChange={(e) => setToLocation(e.target.value)}
-                className="w-full input-field pl-10 py-2.5 sm:py-3 text-sm sm:text-base"
+                className="w-full input-field py-2.5 sm:py-3 text-sm sm:text-base"
               />
-              <MapPin size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             </div>
             <button type="submit" className="w-full sm:w-auto btn-primary py-2.5 sm:py-3 text-sm sm:text-base font-medium">
               Filter
