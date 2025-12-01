@@ -1,4 +1,5 @@
-import { Link, useContext } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useContext } from 'react';
 import { MapPin, MessageSquare, LogOut, Plus, BarChart3, Moon, Sun } from 'lucide-react';
 import { getImageUrl, getAvatarUrl } from '../utils/index.js';
 import { ThemeContext } from '../context/ThemeContext';
