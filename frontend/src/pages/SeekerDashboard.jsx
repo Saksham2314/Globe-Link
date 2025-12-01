@@ -37,7 +37,25 @@ export default function SeekerDashboard() {
       const chatData = await chatResponse.json();
       if (!chatResponse.ok) throw new Error(chatData.message);
 
-      setChats(chatData.chats || []);
+      // Fetch fresh message data for each chat
+      const chatsWithMessages = await Promise.all(
+        (chatData.chats || []).map(async (chat) => {
+          try {
+            const messageResponse = await fetch(`/api/chats/${chat._id}`, {
+              headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const messageData = await messageResponse.json();
+            if (messageResponse.ok) {
+              return { ...chat, messages: messageData.chat?.messages || chat.messages || [] };
+            }
+          } catch (err) {
+            console.error(`Error fetching messages for chat ${chat._id}:`, err);
+          }
+          return chat;
+        })
+      );
+
+      setChats(chatsWithMessages);
       
       // Fetch saved journeys count
       const savedResponse = await fetch('/api/journeys/saved/all', {
@@ -56,7 +74,7 @@ export default function SeekerDashboard() {
       const totalJourneysViewed = viewedData.count || 0;
       
       setStats({
-        totalChats: chatData.chats?.length || 0,
+        totalChats: chatsWithMessages?.length || 0,
         totalJourneysViewed,
         totalFavorites
       });
