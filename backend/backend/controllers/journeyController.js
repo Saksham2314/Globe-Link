@@ -1,6 +1,7 @@
 import Journey from '../models/Journey.js';
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
+import { fileToBase64, isBase64Image } from '../middleware/upload.js';
 
 export const createJourney = async (req, res) => {
   try {
@@ -10,17 +11,19 @@ export const createJourney = async (req, res) => {
       return res.status(400).json({ message: 'Please provide all required fields' });
     }
     
-    // Handle file uploads
+    // Handle file uploads - convert to base64
     const images = [];
     const videos = [];
     
     if (req.files) {
       req.files.forEach(file => {
-        const filePath = `/uploads/${file.filename}`;
-        if (file.mimetype.startsWith('image/')) {
-          images.push(filePath);
-        } else if (file.mimetype.startsWith('video/')) {
-          videos.push(filePath);
+        const base64Data = fileToBase64(file);
+        if (base64Data) {
+          if (file.mimetype.startsWith('image/')) {
+            images.push(base64Data);
+          } else if (file.mimetype.startsWith('video/')) {
+            videos.push(base64Data);
+          }
         }
       });
     }
@@ -34,9 +37,9 @@ export const createJourney = async (req, res) => {
       endDate: new Date(endDate),
       duration: Math.ceil((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24)),
       traveler: req.user.id,
-      highlights: highlights ? JSON.parse(highlights) : [],
+      highlights: Array.isArray(highlights) ? highlights : [highlights],
       budget,
-      transportation: transportation ? JSON.parse(transportation) : [],
+      transportation: Array.isArray(transportation) ? transportation : [transportation],
       images,
       videos
     });
@@ -151,17 +154,19 @@ export const updateJourney = async (req, res) => {
     
     const { title, description, startLocation, endLocation, startDate, endDate, highlights, budget, transportation, existingImages } = req.body;
     
-    // Handle file uploads
-    const images = existingImages ? JSON.parse(existingImages) : [];
+    // Handle file uploads - keep existing base64 images and add new ones
+    let images = existingImages ? JSON.parse(existingImages) : [];
     const videos = [];
     
     if (req.files) {
       req.files.forEach(file => {
-        const filePath = `/uploads/${file.filename}`;
-        if (file.mimetype.startsWith('image/')) {
-          images.push(filePath);
-        } else if (file.mimetype.startsWith('video/')) {
-          videos.push(filePath);
+        const base64Data = fileToBase64(file);
+        if (base64Data) {
+          if (file.mimetype.startsWith('image/')) {
+            images.push(base64Data);
+          } else if (file.mimetype.startsWith('video/')) {
+            videos.push(base64Data);
+          }
         }
       });
     }

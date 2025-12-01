@@ -155,7 +155,15 @@ export default function TravelerDashboard() {
                       {journey.images && journey.images.length > 0 && (
                         <div className="flex gap-2 mt-3">
                           {journey.images.map((img, idx) => (
-                            <img key={idx} src={getImageUrl(img)} alt="Journey" className="w-16 h-16 rounded object-cover" onError={(e) => e.target.src = '/api/placeholder'} />
+                            <img 
+                              key={idx} 
+                              src={getImageUrl(img)} 
+                              alt="Journey" 
+                              className="w-16 h-16 rounded object-cover" 
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                              }} 
+                            />
                           ))}
                         </div>
                       )}

@@ -154,7 +154,9 @@ export default function SeekerDashboard() {
                                 src={otherParticipant?.profileImage ? getImageUrl(otherParticipant.profileImage) : getAvatarUrl(otherParticipant)} 
                                 alt={otherParticipant?.name}
                                 className="w-8 h-8 rounded-full object-cover"
-                                onError={(e) => e.target.src = getAvatarUrl(otherParticipant)}
+                                onError={(e) => {
+                                  e.target.src = getAvatarUrl(otherParticipant);
+                                }}
                               />
                               <span className="font-semibold text-gray-900">{otherParticipant?.name}</span>
                             </>

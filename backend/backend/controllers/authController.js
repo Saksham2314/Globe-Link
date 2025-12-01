@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import { fileToBase64 } from '../middleware/upload.js';
 
 export const register = async (req, res) => {
   try {
@@ -14,7 +15,8 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: 'Email already registered' });
     }
     
-    const profileImage = req.file ? `/uploads/${req.file.filename}` : null;
+    // Convert profile image to base64
+    const profileImage = req.file ? fileToBase64(req.file) : null;
     
     const user = await User.create({ 
       name, 

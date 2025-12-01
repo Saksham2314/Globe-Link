@@ -153,10 +153,12 @@ export default function Chats() {
                     >
                     <div className="flex items-center gap-3">
                         <img
-                          src={getImageUrl(other?.profileImage) || getAvatarUrl(other)}
+                          src={other?.profileImage ? getImageUrl(other.profileImage) : getAvatarUrl(other)}
                           alt={other?.name}
                           className="w-12 h-12 rounded-full object-cover"
-                          onError={(e) => e.target.src = getAvatarUrl(other)}
+                          onError={(e) => {
+                            e.target.src = getAvatarUrl(other);
+                          }}
                         />
                         <div className="flex-1 min-w-0">
                           <p className="font-semibold text-gray-900 truncate">{other?.name}</p>
@@ -186,10 +188,12 @@ export default function Chats() {
                 <div className="p-4 border-b flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <img
-                      src={getImageUrl(getOtherParticipant(selectedChat)?.profileImage) || getAvatarUrl(getOtherParticipant(selectedChat))}
+                      src={getOtherParticipant(selectedChat)?.profileImage ? getImageUrl(getOtherParticipant(selectedChat).profileImage) : getAvatarUrl(getOtherParticipant(selectedChat))}
                       alt={getOtherParticipant(selectedChat)?.name}
                       className="w-10 h-10 rounded-full object-cover"
-                      onError={(e) => e.target.src = getAvatarUrl(getOtherParticipant(selectedChat))}
+                      onError={(e) => {
+                        e.target.src = getAvatarUrl(getOtherParticipant(selectedChat));
+                      }}
                     />
                     <div>
                       <p className="font-semibold text-gray-900">{getOtherParticipant(selectedChat)?.name}</p>
@@ -214,10 +218,12 @@ export default function Chats() {
                       >
                         {msg.sender?._id !== currentUser.id && (
                           <img
-                            src={getImageUrl(msg.sender?.profileImage) || getAvatarUrl(msg.sender)}
+                            src={msg.sender?.profileImage ? getImageUrl(msg.sender.profileImage) : getAvatarUrl(msg.sender)}
                             alt={msg.sender?.name}
                             className="w-8 h-8 rounded-full object-cover flex-shrink-0"
-                            onError={(e) => e.target.src = getAvatarUrl(msg.sender)}
+                            onError={(e) => {
+                              e.target.src = getAvatarUrl(msg.sender);
+                            }}
                           />
                         )}
                         <div
@@ -231,10 +237,12 @@ export default function Chats() {
                         </div>
                         {msg.sender?._id === currentUser.id && (
                           <img
-                            src={getImageUrl(currentUser.profileImage) || getAvatarUrl(currentUser)}
+                            src={currentUser.profileImage ? getImageUrl(currentUser.profileImage) : getAvatarUrl(currentUser)}
                             alt={currentUser.name}
                             className="w-8 h-8 rounded-full object-cover flex-shrink-0"
-                            onError={(e) => e.target.src = getAvatarUrl(currentUser)}
+                            onError={(e) => {
+                              e.target.src = getAvatarUrl(currentUser);
+                            }}
                           />
                         )}
                       </div>
