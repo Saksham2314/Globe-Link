@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MapPin, Calendar, User, MessageCircle, Loader, Play, ImageIcon } from 'lucide-react';
 import { getImageUrl, getAvatarUrl } from '../utils/index.js';
@@ -11,10 +11,14 @@ export default function JourneyDetail() {
   const [error, setError] = useState('');
   const [creatingChat, setCreatingChat] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
+  const viewCountedRef = useRef(false);
   const currentUser = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
-    fetchJourney();
+    if (!viewCountedRef.current) {
+      fetchJourney();
+      viewCountedRef.current = true;
+    }
   }, [id]);
 
   const fetchJourney = async () => {
